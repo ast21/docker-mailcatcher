@@ -1,0 +1,30 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./default.conf.template:/etc/nginx/templates/default.conf.template
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+    depends_on:
+      - mailcatcher
+    networks:
+      - front
+      - backend
+    restart: always
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    networks:
+      - backend
+      - mailcatcher
+    restart: always
+
+networks:
+  front:
+    external:
+      name: front
+  mailcatcher:
+    external:
+      name: mailcatcher
+  backend:
